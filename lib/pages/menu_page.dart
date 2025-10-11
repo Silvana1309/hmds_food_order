@@ -378,94 +378,120 @@ class _MenuPageState extends State<MenuPage> {
     TextEditingController noteController = TextEditingController();
 
     showModalBottomSheet(
+      isScrollControlled: true, // ✅ biar sheet bisa menyesuaikan tinggi layar
       backgroundColor: Colors.grey[900],
       context: context,
       builder: (context) {
-        return StatefulBuilder(
-          builder: (context, setState) =>
-              Padding(
-                padding: const EdgeInsets.all(16),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      food.name,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    TextField(
-                      controller: noteController,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        hintText: 'Catatan (misal: tanpa pedas)',
-                        hintStyle: TextStyle(color: Colors.white54),
-                        enabledBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white30),
-                        ),
-                        focusedBorder: UnderlineInputBorder(
-                          borderSide: BorderSide(color: Colors.orangeAccent),
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 16),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        IconButton(
-                          color: Colors.white,
-                          icon: const Icon(Icons.remove_circle_outline),
-                          onPressed: () {
-                            if (quantity > 1) setState(() => quantity--);
-                          },
-                        ),
-                        Text(
-                          '$quantity',
-                          style: const TextStyle(
-                              color: Colors.white, fontSize: 18),
-                        ),
-                        IconButton(
-                          color: Colors.white,
-                          icon: const Icon(Icons.add_circle_outline),
-                          onPressed: () => setState(() => quantity++),
-                        ),
-                      ],
-                    ),
-                    const SizedBox(height: 16),
-                    ElevatedButton.icon(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.orangeAccent,
-                      ),
-                      icon: const Icon(Icons.shopping_cart),
-                      label: const Text('Tambah ke Keranjang'),
-                      onPressed: () {
-                        final newItem = FoodItem(
-                          id: food.id,
-                          name: food.name,
-                          description: food.description,
-                          price: food.price,
-                          category: food.category,
-                          imageUrl: food.imageUrl,
-                          quantity: quantity,
-                          note: noteController.text,
-                        );
-                        Provider.of<CartProvider>(context, listen: false)
-                            .addItem(newItem);
-                        Navigator.pop(context);
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(
-                            content: Text('${food
-                                .name} ditambahkan ke keranjang'),
-                          ),
-                        );
-                      },
-                    ),
-                  ],
-                ),
+        return DraggableScrollableSheet(
+          expand: false,
+          initialChildSize: 0.6,
+          // tinggi awal 60%
+          minChildSize: 0.4,
+          maxChildSize: 0.9,
+          builder: (context, scrollController) {
+            return SingleChildScrollView(
+              controller: scrollController,
+              padding: EdgeInsets.only(
+                left: 16,
+                right: 16,
+                top: 16,
+                bottom: MediaQuery
+                    .of(context)
+                    .viewInsets
+                    .bottom + 16,
               ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    food.name,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  TextField(
+                    controller: noteController,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      hintText: 'Catatan (misal: tanpa pedas)',
+                      hintStyle: TextStyle(color: Colors.white54),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white30),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.orangeAccent),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        color: Colors.white,
+                        icon: const Icon(Icons.remove_circle_outline),
+                        onPressed: () {
+                          if (quantity > 1) {
+                            quantity--;
+                            (context as Element)
+                                .markNeedsBuild(); // update tampilan
+                          }
+                        },
+                      ),
+                      Text(
+                        '$quantity',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                        ),
+                      ),
+                      IconButton(
+                        color: Colors.white,
+                        icon: const Icon(Icons.add_circle_outline),
+                        onPressed: () {
+                          quantity++;
+                          (context as Element).markNeedsBuild();
+                        },
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  ElevatedButton.icon(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.orangeAccent,
+                      minimumSize: const Size(double.infinity, 45),
+                    ),
+                    icon: const Icon(Icons.shopping_cart),
+                    label: const Text('Tambah ke Keranjang'),
+                    onPressed: () {
+                      final newItem = FoodItem(
+                        id: food.id,
+                        name: food.name,
+                        description: food.description,
+                        price: food.price,
+                        category: food.category,
+                        imageUrl: food.imageUrl,
+                        quantity: quantity,
+                        note: noteController.text,
+                      );
+                      Provider.of<CartProvider>(context, listen: false)
+                          .addItem(newItem);
+                      Navigator.pop(context);
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                              '${food.name} ditambahkan ke keranjang'),
+                        ),
+                      );
+                    },
+                  ),
+                ],
+              ),
+            );
+          },
         );
       },
     );

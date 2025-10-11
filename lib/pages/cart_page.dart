@@ -8,12 +8,14 @@ class CartPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final cartItems = Provider.of<CartProvider>(context).items;
+    final cartProvider = Provider.of<CartProvider>(context);
+    final cartItems = cartProvider.items;
     double total =
     cartItems.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
     return Scaffold(
       backgroundColor: Colors.black,
+      resizeToAvoidBottomInset: false,
       appBar: AppBar(
         title: const Text('Keranjang Belanja'),
         backgroundColor: Colors.redAccent,
@@ -25,7 +27,8 @@ class CartPage extends StatelessWidget {
           style: TextStyle(color: Colors.white),
         ),
       )
-          : Column(
+          : SafeArea(
+        child : Column(
         children: [
           Expanded(
             child: ListView.builder(
@@ -58,7 +61,7 @@ class CartPage extends StatelessWidget {
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.green),
                   onPressed: () {
-                    _showPaymentOptions(context, total);
+                    _showPaymentOptions(context, cartProvider, total);
                   },
                   child: const Text('Bayar Sekarang'),
                 ),
@@ -67,10 +70,12 @@ class CartPage extends StatelessWidget {
           )
         ],
       ),
+    ),
     );
   }
 
-  void _showPaymentOptions(BuildContext context, double total) {
+  void _showPaymentOptions(
+      BuildContext context, CartProvider cartProvider, double total) {
     showModalBottomSheet(
       backgroundColor: Colors.grey[900],
       context: context,
@@ -81,18 +86,18 @@ class CartPage extends StatelessWidget {
               leading: const Icon(Icons.credit_card, color: Colors.white),
               title: const Text('Kartu Kredit/Debit',
                   style: TextStyle(color: Colors.white)),
-              onTap: () => _showSuccessMessage(context),
+              onTap: () => _handlePayment(context, cartProvider),
             ),
             ListTile(
               leading: const Icon(Icons.money, color: Colors.white),
               title: const Text('Tunai', style: TextStyle(color: Colors.white)),
-              onTap: () => _showSuccessMessage(context),
+              onTap: () => _handlePayment(context, cartProvider),
             ),
             ListTile(
               leading: const Icon(Icons.phone_android, color: Colors.white),
               title: const Text('E-Wallet (GoPay / OVO / DANA)',
                   style: TextStyle(color: Colors.white)),
-              onTap: () => _showSuccessMessage(context),
+              onTap: () => _handlePayment(context, cartProvider),
             ),
           ],
         );
@@ -100,13 +105,32 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  void _showSuccessMessage(BuildContext context) {
+  void _handlePayment(BuildContext context, CartProvider cartProvider) {
     Navigator.pop(context);
+
+    if (cartProvider.items.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Keranjang kosong, tidak bisa memproses pesanan!'),
+          backgroundColor: Colors.redAccent,
+        ),
+      );
+      return;
+    }
+
+    // ✅ Simpan pesanan ke riwayat
+    cartProvider.placeOrder();
+
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(
-        content: Text('Pesanan berhasil! Sedang dalam proses.'),
+        content: Text('Pesanan berhasil! Disimpan ke Riwayat Pesanan.'),
         backgroundColor: Colors.green,
       ),
     );
+
+    // ✅ Arahkan ke halaman Riwayat Pesanan (opsional)
+    Future.delayed(const Duration(seconds: 1), () {
+      Navigator.pushNamed(context, '/order_history');
+    });
   }
 }

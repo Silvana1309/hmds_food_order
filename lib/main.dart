@@ -33,6 +33,14 @@ class MyApp extends StatelessWidget {
       title: 'Food Ordering App',
       theme: ThemeData.dark(),
       home: const SplashScreen(), // 🔥 mulai dari SplashScreen
+
+      // 🧭 Tambahkan route di bawah ini
+      routes: {
+        '/menu': (context) => const MenuPage(),
+        '/cart': (context) => const CartPage(),
+        '/order_history': (context) => const OrderHistoryPage(),
+        '/account': (context) => const AccountPage(),
+      },
     );
   }
 }

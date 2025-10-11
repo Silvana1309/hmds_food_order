@@ -8,6 +8,7 @@ class CartProvider extends ChangeNotifier {
   List<FoodItem> get items => _items;
   List<Map<String, dynamic>> get orderHistory => _orderHistory;
 
+  /// ➕ Tambah item ke keranjang
   void addItem(FoodItem item) {
     final index = _items.indexWhere((element) => element.id == item.id);
     if (index >= 0) {
@@ -26,14 +27,17 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  /// ➖ Hapus item berdasarkan ID
   void removeItem(String id) {
     _items.removeWhere((item) => item.id == id);
     notifyListeners();
   }
 
+  /// 💰 Hitung total harga semua item
   double get totalPrice =>
       _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
+  /// 🧹 Hapus semua isi keranjang
   void clearCart() {
     _items.clear();
     notifyListeners();
@@ -56,7 +60,7 @@ class CartProvider extends ChangeNotifier {
           .toList(),
     });
 
-    clearCart(); // kosongkan keranjang setelah checkout
+    clearCart(); // Kosongkan keranjang setelah checkout
     notifyListeners();
   }
 }

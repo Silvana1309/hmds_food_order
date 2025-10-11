@@ -22,18 +22,50 @@ class CartProvider extends ChangeNotifier {
         imageUrl: item.imageUrl,
         category: item.category,
         quantity: 1,
+        note: item.note, // ✅ Simpan catatan jika ada
       ));
     }
     notifyListeners();
   }
 
-  /// ➖ Hapus item berdasarkan ID
+  /// 🗒️ Tambah / ubah catatan pada item
+  void updateNote(String id, String note) {
+    final index = _items.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      _items[index].note = note;
+      notifyListeners();
+    }
+  }
+
+  /// ➕ Tambah jumlah item
+  void increaseQuantity(String id) {
+    final index = _items.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      _items[index].quantity += 1;
+      notifyListeners();
+    }
+  }
+
+  /// ➖ Kurangi jumlah item
+  void decreaseQuantity(String id) {
+    final index = _items.indexWhere((item) => item.id == id);
+    if (index != -1) {
+      if (_items[index].quantity > 1) {
+        _items[index].quantity -= 1;
+      } else {
+        _items.removeAt(index);
+      }
+      notifyListeners();
+    }
+  }
+
+  /// ❌ Hapus item berdasarkan ID
   void removeItem(String id) {
     _items.removeWhere((item) => item.id == id);
     notifyListeners();
   }
 
-  /// 💰 Hitung total harga semua item
+  /// 💰 Total harga semua item
   double get totalPrice =>
       _items.fold(0, (sum, item) => sum + (item.price * item.quantity));
 
@@ -43,11 +75,13 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 🧾 Simpan pesanan ke riwayat dan kosongkan keranjang
-  void placeOrder() {
+  /// 🧾 Simpan pesanan ke riwayat sesuai user login
+  void placeOrder(String userId) {
     if (_items.isEmpty) return;
 
+    // 🔒 Pastikan pesanan disimpan hanya untuk user tertentu
     _orderHistory.add({
+      'userId': userId, // ✅ Wajib untuk filter per akun
       'nama': 'Pesanan ${_orderHistory.length + 1}',
       'tanggal': DateTime.now().toString().substring(0, 16),
       'total': totalPrice,
@@ -56,11 +90,24 @@ class CartProvider extends ChangeNotifier {
         'nama': e.name,
         'qty': e.quantity,
         'harga': e.price,
+        'catatan': e.note ?? '-', // ✅ Simpan catatan
       })
           .toList(),
     });
 
     clearCart(); // Kosongkan keranjang setelah checkout
+    notifyListeners();
+  }
+
+  /// 🔍 Ambil riwayat pesanan berdasarkan userId
+  List<Map<String, dynamic>> getUserOrders(String userId) {
+    // Filter hanya pesanan milik user yang sedang login
+    return _orderHistory.where((order) => order['userId'] == userId).toList();
+  }
+
+  /// 🧹 Bersihkan semua riwayat pesanan (opsional, admin only)
+  void clearOrderHistory() {
+    _orderHistory.clear();
     notifyListeners();
   }
 }

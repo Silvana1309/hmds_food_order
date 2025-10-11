@@ -11,6 +11,8 @@ import 'provider/cart_provider.dart';
 import 'pages/menu_page.dart';
 import 'pages/login_page.dart';
 import 'pages/order_history_page.dart';
+import 'models/order_model.dart';
+import'provider/order_provider.dart';
 
 void main() {
   runApp(

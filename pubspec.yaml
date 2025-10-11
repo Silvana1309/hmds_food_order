@@ -73,6 +73,23 @@ flutter:
     - assets/images/vegetarian/naskunberlimpah.jpeg
     - assets/images/vegetarian/naskunhemat.jpeg
     - assets/images/vegetarian/naskunmini.jpeg
+    - assets/images/non_vegetarian/asam-manis.jpeg
+    - assets/images/non_vegetarian/bbq.jpeg
+    - assets/images/non_vegetarian/bulgogi.jpeg
+    - assets/images/non_vegetarian/mie_sinyemek.jpeg
+    - assets/images/non_vegetarian/nasigoreng.jpeg
+    - assets/images/non_vegetarian/silpasta.jpeg
+    - assets/images/non_vegetarian/teriyaki.jpeg
+    - assets/images/minuman/air_mineral.jpeg
+    - assets/images/minuman/americano.jpeg
+    - assets/images/minuman/es_batu.jpeg
+    - assets/images/minuman/kopi_susu.jpeg
+    - assets/images/minuman/liang teh.jpeg
+    - assets/images/minuman/lo-han-guo.jpeg
+    - assets/images/minuman/lychee yakult.jpeg
+    - assets/images/minuman/matcha-latte.jpeg
+    - assets/images/minuman/teh.jpeg
+    - assets/images/minuman/teh_manis.jpeg
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

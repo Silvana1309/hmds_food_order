@@ -20,7 +20,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Nasi goreng dengan bumbu spesial dan telur mata sapi.',
       price: 25000,
       category: 'Non-Vegetarian',
-      imageUrl: 'https://images.unsplash.com/photo-1604908176835-0465191b6b8a',
+      imageUrl: 'assets/images/non_vegetarian/nasigoreng.jpeg',
     ),
     FoodItem(
       id: 'nv2',
@@ -28,7 +28,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Mie goreng basah dengan cita rasa gurih pedas.',
       price: 23000,
       category: 'Non-Vegetarian',
-      imageUrl: 'https://images.unsplash.com/photo-1617196034796-73f3c0373b21',
+      imageUrl: 'assets/images/non_vegetarian/mie_sinyemek.jpeg',
     ),
     FoodItem(
       id: 'nv3',
@@ -36,7 +36,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Ayam teriyaki lembut disajikan dengan nasi hangat.',
       price: 30000,
       category: 'Non-Vegetarian',
-      imageUrl: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0',
+      imageUrl: 'assets/images/non_vegetarian/teriyaki.jpeg',
     ),
     FoodItem(
       id: 'nv4',
@@ -44,7 +44,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Ayam panggang dengan saus barbeque khas HMDS.',
       price: 32000,
       category: 'Non-Vegetarian',
-      imageUrl: 'https://images.unsplash.com/photo-1603052875309-2174b0ec49b0',
+      imageUrl: 'assets/images/non_vegetarian/bbq.jpeg',
     ),
     FoodItem(
       id: 'nv5',
@@ -52,7 +52,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Ayam goreng krispi dengan saus asam manis segar.',
       price: 29000,
       category: 'Non-Vegetarian',
-      imageUrl: 'https://images.unsplash.com/photo-1625944230948-b4446e86db75',
+      imageUrl: 'assets/images/non_vegetarian/asam-manis.jpeg',
     ),
     FoodItem(
       id: 'nv6',
@@ -60,7 +60,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Ayam berbumbu manis gurih ala Korea.',
       price: 32000,
       category: 'Non-Vegetarian',
-      imageUrl: 'https://images.unsplash.com/photo-1617196034736-92b192b5aa65',
+      imageUrl: 'assets/images/non_vegetarian/bulgogi.jpeg',
     ),
     FoodItem(
       id: 'nv7',
@@ -68,7 +68,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Pasta lembut dengan saus creamy khas HMDS.',
       price: 27000,
       category: 'Non-Vegetarian',
-      imageUrl: 'https://images.unsplash.com/photo-1603133872878-684f0e1b3a2b',
+      imageUrl: 'assets/images/non_vegetarian/silpasta.jpeg',
     ),
 
     // ---------------- Vegetarian ----------------
@@ -152,7 +152,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Air mineral segar.',
       price: 5000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1556800463-7995dc657249',
+      imageUrl: 'assets/images/minuman/air_mineral.jpeg',
     ),
     FoodItem(
       id: 'd2',
@@ -160,7 +160,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Pilihan teh tawar hangat atau dingin.',
       price: 7000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1567306226416-28f0efdc88ce',
+      imageUrl: 'assets/images/minuman/teh.jpeg',
     ),
     FoodItem(
       id: 'd3',
@@ -168,7 +168,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Teh manis khas HMDS, bisa hangat atau dingin.',
       price: 8000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1511920170033-f8396924c348',
+      imageUrl: 'assets/images/minuman/teh_manis.jpeg',
     ),
     FoodItem(
       id: 'd4',
@@ -176,7 +176,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Minuman herbal segar dan menenangkan.',
       price: 10000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1590080875839-3c9b93f1d4f5',
+      imageUrl: 'assets/images/minuman/liang teh.jpeg',
     ),
     FoodItem(
       id: 'd5',
@@ -184,7 +184,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Minuman herbal khas Asia dengan rasa manis alami.',
       price: 12000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1600180758890-6f2720c7444d',
+      imageUrl: 'assets/images/minuman/lo-han-guo.jpeg',
     ),
     FoodItem(
       id: 'd6',
@@ -192,7 +192,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Kopi hitam dengan cita rasa kuat.',
       price: 15000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93',
+      imageUrl: 'assets/images/minuman/americano.jpeg',
     ),
     FoodItem(
       id: 'd7',
@@ -200,7 +200,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Kopi susu segar dengan es batu.',
       price: 17000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1542444459-db2a0c9e5a1d',
+      imageUrl: 'assets/images/minuman/kopi_susu.jpeg',
     ),
     FoodItem(
       id: 'd8',
@@ -208,7 +208,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Tambahan es batu untuk minuman kamu.',
       price: 3000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1557821552-17105176677c',
+      imageUrl: 'assets/images/minuman/es_batu.jpeg',
     ),
     FoodItem(
       id: 'd9',
@@ -216,7 +216,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Minuman matcha dengan susu lembut.',
       price: 18000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1567427018141-0584cfcbf1b8',
+      imageUrl: 'assets/images/minuman/matcha-latte.jpeg',
     ),
     FoodItem(
       id: 'd10',
@@ -224,7 +224,7 @@ class _MenuPageState extends State<MenuPage> {
       description: 'Minuman segar kombinasi lychee dan yakult.',
       price: 20000,
       category: 'Minuman',
-      imageUrl: 'https://images.unsplash.com/photo-1617196034745-9cb885ffa38c',
+      imageUrl: 'assets/images/minuman/lychee yakult.jpeg',
     ),
   ];
 

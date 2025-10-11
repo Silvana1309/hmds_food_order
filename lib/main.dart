@@ -10,6 +10,7 @@ import 'package:provider/provider.dart';
 import 'provider/cart_provider.dart';
 import 'pages/menu_page.dart';
 import 'pages/login_page.dart';
+import 'pages/order_history_page.dart';
 
 void main() {
   runApp(
@@ -276,7 +277,7 @@ class _HomePageState extends State<HomePage> {
 
   final List<Widget> pages = [
     const MenuPage(),
-    const CartPage(),
+    const OrderHistoryPage(),
     const AccountPage(),
   ];
 
@@ -289,10 +290,18 @@ class _HomePageState extends State<HomePage> {
         onTap: (i) => setState(() => currentIndex = i),
         selectedItemColor: Colors.orange,
         items: const [
-          BottomNavigationBarItem(icon: Icon(Icons.restaurant), label: 'Menu'),
-          BottomNavigationBarItem(
-              icon: Icon(Icons.shopping_cart), label: 'Keranjang'),
-          BottomNavigationBarItem(icon: Icon(Icons.person), label: 'Akun'),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.restaurant),
+          label: 'Menu',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.history),
+          label: 'Riwayat Pesanan',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: 'Akun',
+        ),
         ],
       ),
     );
@@ -310,7 +319,7 @@ final List<FoodItem> sampleMenu = [
     description: 'Nasi goreng dengan bumbu spesial dan telur mata sapi.',
     price: 25000,
     category: 'Non-Vegetarian',
-    imageUrl: 'https://images.unsplash.com/photo-1604908176835-0465191b6b8a',
+    imageUrl: 'assets/images/non_vegetarian/nasigoreng.jpeg',
   ),
   FoodItem(
     id: 'nv2',
@@ -318,7 +327,7 @@ final List<FoodItem> sampleMenu = [
     description: 'Mie goreng basah dengan cita rasa gurih pedas.',
     price: 23000,
     category: 'Non-Vegetarian',
-    imageUrl: 'https://images.unsplash.com/photo-1617196034796-73f3c0373b21',
+    imageUrl: 'assets/images/non_vegetarian/mie_sinyemek.jpeg',
   ),
   FoodItem(
     id: 'nv3',
@@ -326,7 +335,7 @@ final List<FoodItem> sampleMenu = [
     description: 'Ayam teriyaki lembut disajikan dengan nasi hangat.',
     price: 30000,
     category: 'Non-Vegetarian',
-    imageUrl: 'https://images.unsplash.com/photo-1589302168068-964664d93dc0',
+    imageUrl: 'assets/images/non_vegetarian/teriyaki.jpeg',
   ),
   FoodItem(
     id: 'nv4',
@@ -334,7 +343,7 @@ final List<FoodItem> sampleMenu = [
     description: 'Ayam panggang dengan saus barbeque khas HMDS.',
     price: 32000,
     category: 'Non-Vegetarian',
-    imageUrl: 'https://images.unsplash.com/photo-1603052875309-2174b0ec49b0',
+    imageUrl: 'assets/images/non_vegetarian/bbq.jpeg',
   ),
   FoodItem(
     id: 'nv5',
@@ -342,7 +351,7 @@ final List<FoodItem> sampleMenu = [
     description: 'Ayam goreng krispi dengan saus asam manis segar.',
     price: 29000,
     category: 'Non-Vegetarian',
-    imageUrl: 'https://images.unsplash.com/photo-1625944230948-b4446e86db75',
+    imageUrl: 'assets/images/non_vegetarian/asam-manis.jpeg',
   ),
   FoodItem(
     id: 'nv6',
@@ -350,7 +359,7 @@ final List<FoodItem> sampleMenu = [
     description: 'Ayam berbumbu manis gurih ala Korea.',
     price: 32000,
     category: 'Non-Vegetarian',
-    imageUrl: 'https://images.unsplash.com/photo-1617196034736-92b192b5aa65',
+    imageUrl: 'assets/images/non_vegetarian/bulgogi.jpeg',
   ),
   FoodItem(
     id: 'nv7',
@@ -358,7 +367,7 @@ final List<FoodItem> sampleMenu = [
     description: 'Pasta lembut dengan saus creamy khas HMDS.',
     price: 27000,
     category: 'Non-Vegetarian',
-    imageUrl: 'https://images.unsplash.com/photo-1603133872878-684f0e1b3a2b',
+    imageUrl: 'assets/images/non_vegetarian/silpasta.jpeg',
   ),
 
   // ---------------- Vegetarian ----------------

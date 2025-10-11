@@ -3,8 +3,10 @@ import '../models/food_item.dart';
 
 class CartProvider extends ChangeNotifier {
   final List<FoodItem> _items = [];
+  final List<Map<String, dynamic>> _orderHistory = [];
 
   List<FoodItem> get items => _items;
+  List<Map<String, dynamic>> get orderHistory => _orderHistory;
 
   void addItem(FoodItem item) {
     final index = _items.indexWhere((element) => element.id == item.id);
@@ -34,6 +36,27 @@ class CartProvider extends ChangeNotifier {
 
   void clearCart() {
     _items.clear();
+    notifyListeners();
+  }
+
+  /// 🧾 Simpan pesanan ke riwayat dan kosongkan keranjang
+  void placeOrder() {
+    if (_items.isEmpty) return;
+
+    _orderHistory.add({
+      'nama': 'Pesanan ${_orderHistory.length + 1}',
+      'tanggal': DateTime.now().toString().substring(0, 16),
+      'total': totalPrice,
+      'items': _items
+          .map((e) => {
+        'nama': e.name,
+        'qty': e.quantity,
+        'harga': e.price,
+      })
+          .toList(),
+    });
+
+    clearCart(); // kosongkan keranjang setelah checkout
     notifyListeners();
   }
 }

@@ -78,10 +78,8 @@ class CartProvider extends ChangeNotifier {
   /// 🧾 Simpan pesanan ke riwayat sesuai user login
   void placeOrder(String userId, String paymentMethod) {
     if (_items.isEmpty) return;
-
-    // 🔒 Pastikan pesanan disimpan hanya untuk user tertentu
     _orderHistory.add({
-      'userId': userId, // ✅ Wajib untuk filter per akun
+      'userId': userId,
       'nama': 'Pesanan ${_orderHistory.length + 1}',
       'tanggal': DateTime.now().toString().substring(0, 16),
       'total': totalPrice,
@@ -90,18 +88,18 @@ class CartProvider extends ChangeNotifier {
         'nama': e.name,
         'qty': e.quantity,
         'harga': e.price,
-        'catatan': e.note ?? '-', // ✅ Simpan catatan
+        'catatan': e.note ?? '-',
       })
           .toList(),
     });
 
-    clearCart(); // Kosongkan keranjang setelah checkout
+    // Kosongkan keranjang setelah checkout
+    clearCart();
     notifyListeners();
   }
 
   /// 🔍 Ambil riwayat pesanan berdasarkan userId
   List<Map<String, dynamic>> getUserOrders(String userId) {
-    // Filter hanya pesanan milik user yang sedang login
     return _orderHistory.where((order) => order['userId'] == userId).toList();
   }
 

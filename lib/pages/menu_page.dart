@@ -346,21 +346,25 @@ class _MenuPageState extends State<MenuPage> {
               padding: const EdgeInsets.only(top: 4),
               child: Column(
                 mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Text(
-                    'Rp ${food.price.toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      color: Colors.orangeAccent,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 12,
+                  Flexible(
+                    child: Text(
+                      'Rp ${food.price.toStringAsFixed(0)}',
+                      style: const TextStyle(
+                        color: Colors.orangeAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
                   ),
                   const SizedBox(height: 4),
                   IconButton(
-                    icon: const Icon(
-                        Icons.add_circle, color: Colors.orangeAccent),
+                    icon: const Icon(Icons.add_circle, color: Colors.orangeAccent),
                     iconSize: 22,
                     padding: EdgeInsets.zero,
+                    constraints: const BoxConstraints(), // ✅ Hindari tinggi paksa
                     onPressed: () => _showCustomizationSheet(context, food),
                   ),
                 ],

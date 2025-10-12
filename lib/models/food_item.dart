@@ -19,3 +19,5 @@ class FoodItem {
     this.note,
   });
 }
+
+

@@ -76,7 +76,7 @@ class CartProvider extends ChangeNotifier {
   }
 
   /// 🧾 Simpan pesanan ke riwayat sesuai user login
-  void placeOrder(String userId) {
+  void placeOrder(String userId, String paymentMethod) {
     if (_items.isEmpty) return;
 
     // 🔒 Pastikan pesanan disimpan hanya untuk user tertentu

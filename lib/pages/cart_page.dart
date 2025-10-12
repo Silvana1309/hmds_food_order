@@ -4,8 +4,15 @@ import 'package:shared_preferences/shared_preferences.dart';
 import '../models/food_item.dart';
 import '../provider/cart_provider.dart';
 
-class CartPage extends StatelessWidget {
+class CartPage extends StatefulWidget {
   const CartPage({super.key});
+
+  @override
+  State<CartPage> createState() => _CartPageState();
+}
+
+class _CartPageState extends State<CartPage> {
+  String selectedPaymentMethod = ''; // ✅ menyimpan metode pembayaran
 
   @override
   Widget build(BuildContext context) {
@@ -82,7 +89,7 @@ class CartPage extends StatelessWidget {
 
                           const SizedBox(height: 8),
 
-                          // 🔸 Catatan (editable)
+                          // 🔸 Catatan
                           TextField(
                             style:
                             const TextStyle(color: Colors.white70),
@@ -144,8 +151,8 @@ class CartPage extends StatelessWidget {
                               ),
                               Text(
                                 'Subtotal: Rp ${(item.price * item.quantity).toStringAsFixed(0)}',
-                                style: const TextStyle(
-                                    color: Colors.white70),
+                                style:
+                                const TextStyle(color: Colors.white70),
                               ),
                             ],
                           ),
@@ -157,7 +164,68 @@ class CartPage extends StatelessWidget {
               ),
             ),
 
-            // 🔹 Bagian Total & Tombol Bayar
+            // 🔹 Pilihan metode pembayaran
+            Padding(
+              padding:
+              const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Pilih Metode Pembayaran',
+                    style: TextStyle(
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16),
+                  ),
+                  const SizedBox(height: 8),
+                  Container(
+                    padding: const EdgeInsets.symmetric(horizontal: 12),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[900],
+                      borderRadius: BorderRadius.circular(10),
+                      border:
+                      Border.all(color: Colors.orangeAccent, width: 1),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        dropdownColor: Colors.grey[900],
+                        value: selectedPaymentMethod.isEmpty
+                            ? null
+                            : selectedPaymentMethod,
+                        hint: const Text(
+                          'Pilih metode pembayaran',
+                          style: TextStyle(color: Colors.white54),
+                        ),
+                        icon: const Icon(Icons.arrow_drop_down,
+                            color: Colors.orangeAccent),
+                        style: const TextStyle(color: Colors.white),
+                        items: [
+                          'Tunai',
+                          'Debit/Kredit',
+                          'GoPay',
+                          'OVO',
+                          'ShopeePay',
+                          'Dana',
+                        ].map((method) {
+                          return DropdownMenuItem<String>(
+                            value: method,
+                            child: Text(method),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            selectedPaymentMethod = value!;
+                          });
+                        },
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+
+            // 🔹 Total & Tombol Bayar
             Container(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
               decoration: const BoxDecoration(
@@ -198,11 +266,20 @@ class CartPage extends StatelessWidget {
                         ),
                       ),
                       onPressed: () {
-                        _showPaymentOptions(
-                            context, cartProvider, total);
+                        if (selectedPaymentMethod.isEmpty) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text(
+                                  'Pilih metode pembayaran terlebih dahulu!'),
+                              backgroundColor: Colors.orangeAccent,
+                            ),
+                          );
+                          return;
+                        }
+                        _handlePayment(
+                            context, cartProvider, selectedPaymentMethod);
                       },
-                      icon: const Icon(Icons.payment,
-                          color: Colors.white),
+                      icon: const Icon(Icons.payment, color: Colors.white),
                       label: const Text(
                         'Bayar Sekarang',
                         style: TextStyle(
@@ -222,52 +299,9 @@ class CartPage extends StatelessWidget {
     );
   }
 
-  // 🔸 Tampilkan Pilihan Pembayaran
-  void _showPaymentOptions(
-      BuildContext context, CartProvider cartProvider, double total) {
-    showModalBottomSheet(
-      backgroundColor: Colors.grey[900],
-      shape: const RoundedRectangleBorder(
-        borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
-      ),
-      context: context,
-      builder: (context) {
-        return Wrap(
-          children: [
-            ListTile(
-              leading: const Icon(Icons.credit_card, color: Colors.white),
-              title: const Text(
-                'Kartu Kredit/Debit',
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: () => _handlePayment(context, cartProvider),
-            ),
-            ListTile(
-              leading: const Icon(Icons.money, color: Colors.white),
-              title: const Text('Tunai',
-                  style: TextStyle(color: Colors.white)),
-              onTap: () => _handlePayment(context, cartProvider),
-            ),
-            ListTile(
-              leading:
-              const Icon(Icons.phone_android, color: Colors.white),
-              title: const Text(
-                'E-Wallet (GoPay / OVO / DANA)',
-                style: TextStyle(color: Colors.white),
-              ),
-              onTap: () => _handlePayment(context, cartProvider),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // 🔸 Tangani Pembayaran (dengan user login)
-  Future<void> _handlePayment(
-      BuildContext context, CartProvider cartProvider) async {
-    Navigator.pop(context);
-
+  Future<void> _handlePayment(BuildContext context,
+      CartProvider cartProvider, String paymentMethod) async {
     if (cartProvider.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -282,12 +316,13 @@ class CartPage extends StatelessWidget {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String userId = prefs.getString('userId') ?? 'guest';
 
-    // ✅ Simpan pesanan ke riwayat sesuai akun login
-    cartProvider.placeOrder(userId);
+    // ✅ Simpan pesanan ke riwayat beserta metode pembayaran
+    cartProvider.placeOrder(userId, paymentMethod);
 
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(
-        content: Text('Pesanan berhasil! Disimpan ke Riwayat Pesanan.'),
+      SnackBar(
+        content:
+        Text('Pesanan berhasil! Dibayar menggunakan: $paymentMethod'),
         backgroundColor: Colors.green,
       ),
     );

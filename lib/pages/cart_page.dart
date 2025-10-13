@@ -201,7 +201,7 @@ class _CartPageState extends State<CartPage> {
                             color: Colors.orangeAccent),
                         style: const TextStyle(color: Colors.white),
                         items: [
-                          'Tunai',
+                          'Qris',
                           'Debit/Kredit',
                           'GoPay',
                           'OVO',

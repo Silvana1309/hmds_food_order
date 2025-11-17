@@ -219,7 +219,7 @@ packages:
   provider:
     dependency: "direct main"
     description:
-      name: provider
+      name: view_model
       sha256: "4e82183fa20e5ca25703ead7e05de9e4cceed1fbd1eadc1ac3cb6f565a09f272"
       url: "https://pub.dev"
     source: hosted

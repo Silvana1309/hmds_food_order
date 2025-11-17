@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/food_item.dart';
-import '../provider/cart_provider.dart';
+import '../view_model/cart_provider.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});

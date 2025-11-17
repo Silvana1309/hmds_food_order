@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../provider/cart_provider.dart';
+import '../models/order_model.dart';
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
@@ -28,9 +29,7 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
 
   @override
   Widget build(BuildContext context) {
-    final cartProvider = Provider.of<CartProvider>(context);
-    final userOrders =
-    userId == null ? [] : cartProvider.getUserOrders(userId!);
+    final cartProvider = Provider.of<CartProvider>(context, listen: false);
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -40,61 +39,87 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
       ),
       body: userId == null
           ? const Center(child: CircularProgressIndicator())
-          : userOrders.isEmpty
-          ? const Center(
-        child: Text(
-          'Belum ada riwayat pesanan untuk akun ini.',
-          style: TextStyle(color: Colors.white70),
-        ),
-      )
-          : ListView.builder(
-        padding: const EdgeInsets.all(16),
-        itemCount: userOrders.length,
-        itemBuilder: (context, index) {
-          final order = userOrders[index];
-          final items = order['items'] as List;
-          return Card(
-            color: Colors.grey[900],
-            margin: const EdgeInsets.only(bottom: 16),
-            child: Padding(
-              padding: const EdgeInsets.all(12),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(order['nama'],
-                      style: const TextStyle(
-                          color: Colors.orange,
-                          fontWeight: FontWeight.bold)),
-                  Text(order['tanggal'],
-                      style: const TextStyle(color: Colors.white54)),
-                  const Divider(color: Colors.white24),
-                  ...items.map((item) => Row(
-                    mainAxisAlignment:
-                    MainAxisAlignment.spaceBetween,
+          : FutureBuilder<List<Order>>(
+        future: cartProvider.getUserOrders(userId!),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          }
+
+          if (!snapshot.hasData || snapshot.data!.isEmpty) {
+            return const Center(
+              child: Text(
+                'Belum ada riwayat pesanan untuk akun ini.',
+                style: TextStyle(color: Colors.white70),
+              ),
+            );
+          }
+
+          final orders = snapshot.data!;
+
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: orders.length,
+            itemBuilder: (context, index) {
+              final order = orders[index];
+              final items = order.items;
+
+              return Card(
+                color: Colors.grey[900],
+                margin: const EdgeInsets.only(bottom: 16),
+                child: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        '${item['nama']} (x${item['qty']})',
+                        "Order ID: ${order.id}",
                         style: const TextStyle(
-                            color: Colors.white70),
+                          color: Colors.orange,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
+
                       Text(
-                        'Rp ${(item['harga'] * item['qty']).toStringAsFixed(0)}',
+                        order.date.toString(),
+                        style: const TextStyle(color: Colors.white54),
+                      ),
+
+                      const Divider(color: Colors.white24),
+
+                      ...items.map(
+                            (item) => Row(
+                          mainAxisAlignment:
+                          MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              '${item.name} (x${item.quantity})',
+                              style: const TextStyle(
+                                  color: Colors.white70),
+                            ),
+                            Text(
+                              'Rp ${(item.price * item.quantity).toStringAsFixed(0)}',
+                              style: const TextStyle(
+                                  color: Colors.white70),
+                            ),
+                          ],
+                        ),
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      Text(
+                        'Total: Rp ${order.total.toStringAsFixed(0)}',
                         style: const TextStyle(
-                            color: Colors.white70),
+                          color: Colors.orange,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ],
-                  )),
-                  const SizedBox(height: 8),
-                  Text(
-                    'Total: Rp ${order['total'].toStringAsFixed(0)}',
-                    style: const TextStyle(
-                      color: Colors.orange,
-                      fontWeight: FontWeight.bold,
-                    ),
                   ),
-                ],
-              ),
-            ),
+                ),
+              );
+            },
           );
         },
       ),

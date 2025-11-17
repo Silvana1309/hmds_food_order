@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import '../models/food_item.dart';
+import '../models/order_model.dart';
+import '../repositories/order_repository.dart';
 
 class CartProvider extends ChangeNotifier {
   final List<FoodItem> _items = [];
-  final List<Map<String, dynamic>> _orderHistory = [];
+  final OrderRepository _orderRepo = OrderRepository();
 
   List<FoodItem> get items => _items;
-  List<Map<String, dynamic>> get orderHistory => _orderHistory;
 
   /// ➕ Tambah item ke keranjang
   void addItem(FoodItem item) {
@@ -22,7 +23,7 @@ class CartProvider extends ChangeNotifier {
         imageUrl: item.imageUrl,
         category: item.category,
         quantity: 1,
-        note: item.note, // ✅ Simpan catatan jika ada
+        note: item.note,
       ));
     }
     notifyListeners();
@@ -75,37 +76,28 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 🧾 Simpan pesanan ke riwayat sesuai user login
-  void placeOrder(String userId, String paymentMethod) {
+  /// 🧾 Simpan pesanan ke SQLite
+  Future<void> placeOrder(String userId, String paymentMethod) async {
     if (_items.isEmpty) return;
-    _orderHistory.add({
-      'userId': userId,
-      'nama': 'Pesanan ${_orderHistory.length + 1}',
-      'tanggal': DateTime.now().toString().substring(0, 16),
-      'total': totalPrice,
-      'items': _items
-          .map((e) => {
-        'nama': e.name,
-        'qty': e.quantity,
-        'harga': e.price,
-        'catatan': e.note ?? '-',
-      })
-          .toList(),
-    });
 
-    // Kosongkan keranjang setelah checkout
+    final orderId = DateTime.now().millisecondsSinceEpoch.toString();
+
+    final order = Order(
+      id: orderId,
+      userId: userId,
+      items: List.from(_items),
+      total: totalPrice,
+      date: DateTime.now(),
+    );
+
+    await _orderRepo.insertOrder(order);
+
     clearCart();
     notifyListeners();
   }
 
-  /// 🔍 Ambil riwayat pesanan berdasarkan userId
-  List<Map<String, dynamic>> getUserOrders(String userId) {
-    return _orderHistory.where((order) => order['userId'] == userId).toList();
-  }
-
-  /// 🧹 Bersihkan semua riwayat pesanan (opsional, admin only)
-  void clearOrderHistory() {
-    _orderHistory.clear();
-    notifyListeners();
+  /// 🔍 Ambil riwayat pesanan user dari SQLite
+  Future<List<Order>> getUserOrders(String userId) async {
+    return await _orderRepo.getOrdersByUserId(userId);
   }
 }

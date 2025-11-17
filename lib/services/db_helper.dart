@@ -22,33 +22,24 @@ class DBHelper {
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE cart(
-        id TEXT PRIMARY KEY,
-        name TEXT,
-        description TEXT,
-        price REAL,
-        category TEXT,
-        imageUrl TEXT,
-        quantity INTEGER,
-        note TEXT
-      )
-    ''');
-    await db.execute('''
       CREATE TABLE orders(
         id TEXT PRIMARY KEY,
-        date TEXT,
-        total REAL
+        userId TEXT,
+        total REAL,
+        date TEXT
       )
     ''');
+
     await db.execute('''
       CREATE TABLE order_items(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        order_id TEXT,
-        food_id TEXT,
+        orderId TEXT,
+        itemId TEXT,
         name TEXT,
         price REAL,
-        quantity INTEGER,
-        FOREIGN KEY(order_id) REFERENCES orders(id)
+        qty INTEGER,
+        note TEXT,
+        FOREIGN KEY(orderId) REFERENCES orders(id)
       )
     ''');
   }

@@ -27,6 +27,8 @@ class OrderRepository {
         'price': item.price,
         'qty': item.quantity,
         'note': item.note ?? '',
+        'imageUrl': item.imageUrl,
+        'category': item.category,
       });
     }
 
@@ -58,10 +60,10 @@ class OrderRepository {
         return FoodItem(
           id: item['itemId'] as String,
           name: item['name'] as String,
-          description: '', // tidak disimpan di SQLite
+          description: '', // boleh dikosongkan kalau memang tidak disimpan
           price: (item['price'] as num).toDouble(),
-          imageUrl: '', // tidak disimpan
-          category: '', // tidak disimpan
+          imageUrl: item['imageUrl'] as String,
+          category: item['category'] as String,
           quantity: item['qty'] as int,
           note: item['note'] as String?,
         );

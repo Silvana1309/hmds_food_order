@@ -22,14 +22,20 @@ class _LoginPageState extends State<LoginPage> {
 
       if (username == 'admin' && password == '1234') {
         final prefs = await SharedPreferences.getInstance();
+
+// WAJIB!
+        await prefs.setString('userId', username);
+
         await prefs.setString('displayName', 'Admin HMDS');
         await prefs.setString('email', 'admin@hmds.com');
+
 
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const MenuPage()),
         );
-      } else {
+      }
+      else {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Username atau Password salah!')),
         );

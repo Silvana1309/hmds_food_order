@@ -17,12 +17,22 @@ class DBHelper {
   Future<Database> _initDB(String fileName) async {
     final dbPath = await getDatabasesPath();
     final path = join(dbPath, fileName);
-    return await openDatabase(path, version: 1, onCreate: _onCreate);
+
+    return await openDatabase(
+      path,
+      version: 2,
+      onCreate: _onCreate,
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Jika upgrade dari versi lama → tambah kolom baru
+        await db.execute("ALTER TABLE order_items ADD COLUMN imageUrl TEXT");
+        await db.execute("ALTER TABLE order_items ADD COLUMN category TEXT");
+      },
+    );
   }
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE orders(
+      CREATE TABLE orders (
         id TEXT PRIMARY KEY,
         userId TEXT,
         total REAL,
@@ -31,7 +41,7 @@ class DBHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE order_items(
+      CREATE TABLE order_items (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         orderId TEXT,
         itemId TEXT,
@@ -39,7 +49,19 @@ class DBHelper {
         price REAL,
         qty INTEGER,
         note TEXT,
+        imageUrl TEXT,
+        category TEXT,
         FOREIGN KEY(orderId) REFERENCES orders(id)
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE cart (
+        id TEXT PRIMARY KEY,
+        name TEXT,
+        price REAL,
+        image TEXT,
+        quantity INTEGER
       )
     ''');
   }

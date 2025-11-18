@@ -150,7 +150,8 @@ class _CartPageState extends State<CartPage> {
                                 ],
                               ),
                               Text(
-                                'Subtotal: Rp ${(item.price * item.quantity).toStringAsFixed(0)}',
+                                'Subtotal: Rp ${(item.price * item.quantity)
+                                    .toStringAsFixed(0)}',
                                 style:
                                 const TextStyle(color: Colors.white70),
                               ),
@@ -312,22 +313,23 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    // ✅ Ambil userId dari SharedPreferences
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String userId = prefs.getString('userId') ?? 'guest';
+    String? userId = prefs.getString('userId');
 
-    // ✅ Simpan pesanan ke riwayat beserta metode pembayaran
-    cartProvider.placeOrder(userId, paymentMethod);
+    // 🔥 Semua user boleh pesan → pakai guest jika belum login
+    userId ??= "guest";
+
+    // Simpan pesanan ke database
+    await cartProvider.placeOrder(userId, paymentMethod);
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-        Text('Pesanan berhasil! Dibayar menggunakan: $paymentMethod'),
+        content: Text('Pesanan berhasil! Dibayar menggunakan: $paymentMethod'),
         backgroundColor: Colors.green,
       ),
     );
 
-    // ✅ Arahkan ke halaman Riwayat Pesanan
+    // pindah ke halaman riwayat pesanan
     Future.delayed(const Duration(seconds: 1), () {
       Navigator.pushNamed(context, '/order_history');
     });

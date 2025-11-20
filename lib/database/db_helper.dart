@@ -22,16 +22,26 @@ class DBHelper {
       path,
       version: 5,
       onCreate: _onCreate,
-        onUpgrade: (db, oldVersion, newVersion) async {
-          if (oldVersion < 5) {
+      onUpgrade: (db, oldVersion, newVersion) async {
+        // Tambah kolom hanya jika BELUM ADA
+        if (oldVersion < 5) {
+          final columns = await db.rawQuery("PRAGMA table_info(users)");
+
+          final hasName = columns.any((c) => c['name'] == 'name');
+          final hasEmail = columns.any((c) => c['name'] == 'email');
+
+          if (!hasName) {
             await db.execute("ALTER TABLE users ADD COLUMN name TEXT");
+          }
+          if (!hasEmail) {
             await db.execute("ALTER TABLE users ADD COLUMN email TEXT");
           }
         }
+      },
     );
   }
 
-  Future _onCreate(Database db, int version) async {
+  Future<void> _onCreate(Database db, int version) async {
     await db.execute('''
       CREATE TABLE users(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -72,10 +82,9 @@ class DBHelper {
     ''');
   }
 
-  // --------------------------
+  // ====================
   // SESSION
-  // --------------------------
-
+  // ====================
   Future<void> saveSession(int userId) async {
     final db = await database;
     await db.delete("session");
@@ -85,7 +94,6 @@ class DBHelper {
   Future<int?> getSessionUserId() async {
     final db = await database;
     final result = await db.query("session");
-
     if (result.isEmpty) return null;
     return result.first["userId"] as int;
   }

@@ -67,7 +67,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   }
 
                   ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text("Registrasi berhasil!")),
+                    const SnackBar(content: Text("Registrasi Berhasil!")),
                   );
 
                   Navigator.pop(context);

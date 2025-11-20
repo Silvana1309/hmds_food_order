@@ -20,19 +20,36 @@ class DBHelper {
 
     return await openDatabase(
       path,
-      version: 2,
+      version: 5,
       onCreate: _onCreate,
-      onUpgrade: (db, oldVersion, newVersion) async {
-        // Jika upgrade dari versi lama → tambah kolom baru
-        await db.execute("ALTER TABLE order_items ADD COLUMN imageUrl TEXT");
-        await db.execute("ALTER TABLE order_items ADD COLUMN category TEXT");
-      },
+        onUpgrade: (db, oldVersion, newVersion) async {
+          if (oldVersion < 5) {
+            await db.execute("ALTER TABLE users ADD COLUMN name TEXT");
+            await db.execute("ALTER TABLE users ADD COLUMN email TEXT");
+          }
+        }
     );
   }
 
   Future _onCreate(Database db, int version) async {
     await db.execute('''
-      CREATE TABLE orders (
+      CREATE TABLE users(
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT,
+        password TEXT,
+        name TEXT,
+        email TEXT
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE session(
+        userId INTEGER
+      )
+    ''');
+
+    await db.execute('''
+      CREATE TABLE orders(
         id TEXT PRIMARY KEY,
         userId TEXT,
         total REAL,
@@ -41,7 +58,7 @@ class DBHelper {
     ''');
 
     await db.execute('''
-      CREATE TABLE order_items (
+      CREATE TABLE order_items(
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         orderId TEXT,
         itemId TEXT,
@@ -50,24 +67,31 @@ class DBHelper {
         qty INTEGER,
         note TEXT,
         imageUrl TEXT,
-        category TEXT,
-        FOREIGN KEY(orderId) REFERENCES orders(id)
-      )
-    ''');
-
-    await db.execute('''
-      CREATE TABLE cart (
-        id TEXT PRIMARY KEY,
-        name TEXT,
-        price REAL,
-        image TEXT,
-        quantity INTEGER
+        category TEXT
       )
     ''');
   }
 
-  Future<void> close() async {
+  // --------------------------
+  // SESSION
+  // --------------------------
+
+  Future<void> saveSession(int userId) async {
     final db = await database;
-    return db.close();
+    await db.delete("session");
+    await db.insert("session", {"userId": userId});
+  }
+
+  Future<int?> getSessionUserId() async {
+    final db = await database;
+    final result = await db.query("session");
+
+    if (result.isEmpty) return null;
+    return result.first["userId"] as int;
+  }
+
+  Future<void> clearSession() async {
+    final db = await database;
+    await db.delete("session");
   }
 }

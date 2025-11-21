@@ -238,8 +238,40 @@ class _MenuPageState extends State<MenuPage> {
       length: 3,
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Menu Makanan'),
-          backgroundColor: Colors.redAccent,
+          elevation: 0,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFFFFD700), // Gold
+                  Color(0xFFFFA500), // Premium Orange
+                ],
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
+              ),
+            ),
+          ),
+          title: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: const [
+              Text(
+                "HMDS Food Order",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white70,
+                  fontWeight: FontWeight.w400,
+                ),
+              ),
+              Text(
+                "Menu Makanan",
+                style: TextStyle(
+                  fontSize: 20,
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
           actions: [
             Consumer<CartProvider>(
               builder: (context, cart, _) {
@@ -247,11 +279,11 @@ class _MenuPageState extends State<MenuPage> {
                   children: [
                     IconButton(
                       icon: const Icon(Icons.shopping_cart),
+                      color: Colors.white,
                       onPressed: () {
                         Navigator.push(
                           context,
-                          MaterialPageRoute(builder: (
-                              context) => const CartPage()),
+                          MaterialPageRoute(builder: (context) => const CartPage()),
                         );
                       },
                     ),
@@ -261,14 +293,17 @@ class _MenuPageState extends State<MenuPage> {
                         top: 8,
                         child: Container(
                           padding: const EdgeInsets.all(4),
-                          decoration: const BoxDecoration(
-                            color: Colors.orangeAccent,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
                             shape: BoxShape.circle,
                           ),
                           child: Text(
                             cart.items.length.toString(),
                             style: const TextStyle(
-                                color: Colors.white, fontSize: 12),
+                              color: Colors.black,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -280,14 +315,15 @@ class _MenuPageState extends State<MenuPage> {
           bottom: const TabBar(
             indicatorColor: Colors.white,
             labelColor: Colors.white,
-            unselectedLabelColor: Colors.white60,
+            unselectedLabelColor: Colors.white70,
             tabs: [
-              Tab(text: '🍗Non-Vegetarian'),
-              Tab(text: '🥦Vegetarian'),
-              Tab(text: '🧃Minuman'),
+              Tab(text: '🍗 Non-Vegetarian'),
+              Tab(text: '🥦 Vegetarian'),
+              Tab(text: '🧃 Minuman'),
             ],
           ),
         ),
+
         backgroundColor: Colors.black,
         body: TabBarView(
           children: [
@@ -307,74 +343,118 @@ class _MenuPageState extends State<MenuPage> {
       itemCount: items.length,
       itemBuilder: (context, index) {
         final food = items[index];
-        return Card(
-          color: Colors.grey[900],
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(15)),
+        return Container(
           margin: const EdgeInsets.only(bottom: 16),
-          child: ListTile(
-            contentPadding: const EdgeInsets.symmetric(
-                horizontal: 12, vertical: 8),
-            leading: ClipRRect(
-              borderRadius: BorderRadius.circular(12),
-              child: Image.asset(
-                food.imageUrl,
-                width: 60,
-                height: 60,
-                fit: BoxFit.cover,
+          decoration: BoxDecoration(
+            color: Colors.grey[900],
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 6,
+                offset: const Offset(0, 3),
               ),
-            ),
-            title: Text(
-              food.name,
-              style: const TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
+            ],
+          ),
+          child: Row(
+            children: [
+              // IMAGE
+              ClipRRect(
+                borderRadius: const BorderRadius.horizontal(left: Radius.circular(16)),
+                child: Image.asset(
+                  food.imageUrl,
+                  width: 110,
+                  height: 110,
+                  fit: BoxFit.cover,
+                ),
               ),
-            ),
-            subtitle: Text(
-              food.description,
-              style: const TextStyle(
-                color: Colors.white70,
-                fontSize: 12,
-                height: 1.2,
-              ),
-              maxLines: 2,
-              overflow: TextOverflow.ellipsis,
-            ),
-            trailing: Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Flexible(
-                    child: Text(
-                      'Rp ${food.price.toStringAsFixed(0)}',
-                      style: const TextStyle(
-                        color: Colors.orangeAccent,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+
+              // INFO
+              Expanded(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // NAME AND PRICE
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Expanded(
+                            child: Text(
+                              food.name,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 15,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+                            decoration: BoxDecoration(
+                              color: Colors.orangeAccent,
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Text(
+                              'Rp ${food.price.toStringAsFixed(0)}',
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                      textAlign: TextAlign.center,
-                    ),
+
+                      const SizedBox(height: 6),
+
+                      // DESCRIPTION
+                      Text(
+                        food.description,
+                        style: const TextStyle(
+                          color: Colors.white70,
+                          fontSize: 12,
+                          height: 1.2,
+                        ),
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+
+                      const SizedBox(height: 8),
+
+                      // ADD BUTTON
+                      Align(
+                        alignment: Alignment.centerRight,
+                        child: GestureDetector(
+                          onTap: () => _showCustomizationSheet(context, food),
+                          child: Container(
+                            padding: const EdgeInsets.all(6),
+                            decoration: const BoxDecoration(
+                              color: Colors.orangeAccent,
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.add,
+                              size: 18,
+                              color: Colors.white,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 4),
-                  IconButton(
-                    icon: const Icon(Icons.add_circle, color: Colors.orangeAccent),
-                    iconSize: 22,
-                    padding: EdgeInsets.zero,
-                    constraints: const BoxConstraints(), // ✅ Hindari tinggi paksa
-                    onPressed: () => _showCustomizationSheet(context, food),
-                  ),
-                ],
+                ),
               ),
-            ),
+            ],
           ),
         );
       },
     );
   }
+
 
   /// 🔥 Fitur kostumisasi sebelum ditambahkan ke keranjang
   void _showCustomizationSheet(BuildContext context, FoodItem food) {

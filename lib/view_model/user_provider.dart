@@ -109,8 +109,7 @@ class UserProvider extends ChangeNotifier {
       // refresh data di provider
       _currentUser = await _userRepo.getUserById(userId);
       notifyListeners();
-
-      return null; // sukses
+      return null;
     } catch (e) {
       return "Gagal memperbarui profil";
     }

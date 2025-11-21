@@ -29,7 +29,7 @@ class CartProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  /// 🗒️ Tambah / ubah catatan pada item
+  /// Tambah/ubah catatan pada item
   void updateNote(String id, String note) {
     final index = _items.indexWhere((item) => item.id == id);
     if (index != -1) {

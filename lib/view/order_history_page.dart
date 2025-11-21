@@ -22,7 +22,6 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   }
 
   Future<void> _loadUserId() async {
-    // AMBIL USER ID DARI CART PROVIDER
     final userProvider =
     Provider.of<UserProvider>(context, listen: false);
 

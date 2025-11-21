@@ -53,4 +53,14 @@ class UserRepository {
 
     return null;
   }
+
+  Future<int> update(UserModel user) async {
+    final db = await _dbHelper.database;
+    return await db.update(
+      'users',
+      user.toMap(),
+      where: 'id = ?',
+      whereArgs: [user.id],
+    );
+  }
 }

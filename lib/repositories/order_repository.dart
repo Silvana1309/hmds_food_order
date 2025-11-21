@@ -39,6 +39,8 @@ class OrderRepository {
   Future<List<Order>> getOrdersByUserId(String userId) async {
     final db = await _dbHelper.database;
 
+    print("AMBIL ORDER UNTUK USER ID: $userId"); // << TAMBAHKAN DI SINI
+
     final orderRows = await db.query(
       'orders',
       where: 'userId = ?',

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../view_model/cart_provider.dart';
 import '../models/order_model.dart';
+import '../view_model/user_provider.dart';
+
 
 class OrderHistoryPage extends StatefulWidget {
   const OrderHistoryPage({super.key});
@@ -21,10 +22,15 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
   }
 
   Future<void> _loadUserId() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
+    // AMBIL USER ID DARI CART PROVIDER
+    final userProvider =
+    Provider.of<UserProvider>(context, listen: false);
+
     setState(() {
-      userId = prefs.getString('userId') ?? 'guest';
+      userId = userProvider.currentUser?.id.toString() ?? "guest";
     });
+
+    print("📌 ORDER HISTORY MEMINTA USER ID: $userId");
   }
 
   @override
@@ -79,14 +85,11 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                           fontWeight: FontWeight.bold,
                         ),
                       ),
-
                       Text(
                         order.date.toString(),
                         style: const TextStyle(color: Colors.white54),
                       ),
-
                       const Divider(color: Colors.white24),
-
                       ...items.map(
                             (item) => Row(
                           mainAxisAlignment:
@@ -95,19 +98,19 @@ class _OrderHistoryPageState extends State<OrderHistoryPage> {
                             Text(
                               '${item.name} (x${item.quantity})',
                               style: const TextStyle(
-                                  color: Colors.white70),
+                                color: Colors.white70,
+                              ),
                             ),
                             Text(
                               'Rp ${(item.price * item.quantity).toStringAsFixed(0)}',
                               style: const TextStyle(
-                                  color: Colors.white70),
+                                color: Colors.white70,
+                              ),
                             ),
                           ],
                         ),
                       ),
-
                       const SizedBox(height: 8),
-
                       Text(
                         'Total: Rp ${order.total.toStringAsFixed(0)}',
                         style: const TextStyle(

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:sqflite/sqflite.dart';
 
 // Providers
 import 'view_model/cart_provider.dart';
@@ -13,6 +14,9 @@ import 'view/account_page.dart';
 import 'view/order_history_page.dart';
 import 'view/login_page.dart';
 import 'view/register_page.dart';
+import 'view/edit_profile_page.dart';
+
+
 
 
 
@@ -22,15 +26,19 @@ import 'view/register_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+  // 🔥 HAPUS DB LAMA YANG SUDAH RUSAK
+  final dbPath = await getDatabasesPath();
+  await deleteDatabase('$dbPath/hmds_db.db');
+
   final userProvider = UserProvider();
-  await userProvider.loadUserSession();   // 🔥 ambil session dari SQLite
+  await userProvider.loadUserSession();
 
   runApp(
     MultiProvider(
       providers: [
         ChangeNotifierProvider(create: (_) => CartProvider()),
         ChangeNotifierProvider(create: (_) => OrderProvider()),
-        ChangeNotifierProvider(create: (_) => userProvider),  // 🔥 ini wajib
+        ChangeNotifierProvider(create: (_) => userProvider),
       ],
       child: const MyApp(),
     ),
@@ -57,7 +65,8 @@ class MyApp extends StatelessWidget {
         '/order_history': (context) => const OrderHistoryPage(),
         '/account': (context) => const AccountPage(),
         '/login': (context) => const LoginPage(),
-        '/register': (context) => const RegisterPage(), // 🔥 WAJIB
+        '/register': (context) => const RegisterPage(),
+        '/edit_profile': (context) => const EditProfilePage(),
       },
     );
   }

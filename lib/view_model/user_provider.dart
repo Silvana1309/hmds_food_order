@@ -58,19 +58,61 @@ class UserProvider extends ChangeNotifier {
 
   // LOAD session saat app dibuka
   Future<void> loadUserSession() async {
-    final db = DBHelper();
-    final userId = await db.getSessionUserId();
+    try {
+      final db = DBHelper();
+      final userId = await db.getSessionUserId();
 
-    if (userId == null) {
+      if (userId == null) {
+        _currentUser = null;
+        notifyListeners();
+        return;
+      }
+
+      final user = await _userRepo.getUserById(userId);
+
+      _currentUser = user;
+      notifyListeners();
+    } catch (e) {
+      print("LOAD SESSION ERROR: $e");
       _currentUser = null;
       notifyListeners();
-      return;
     }
+  }
 
-    // Ambil data user dari DB
-    final user = await _userRepo.getUserById(userId);
+  // UPDATE PROFILE
+  Future<String?> updateProfile({
+    required int userId,
+    String? username,
+    String? name,
+    String? email,
+    String? password,
+    String? profileImage,
+  }) async {
+    try {
+      // Ambil user sekarang
+      final current = _currentUser ?? await _userRepo.getUserById(userId);
+      if (current == null) return "User tidak ditemukan";
 
-    _currentUser = user;
-    notifyListeners();
+      // Buat user baru dengan data yang diperbarui
+      final updated = UserModel(
+        id: current.id,
+        username: username ?? current.username,
+        password: password ?? current.password,
+        name: name ?? current.name,
+        email: email ?? current.email,
+        profileImage: profileImage ?? current.profileImage,
+      );
+
+      // update ke database
+      await _userRepo.update(updated);
+
+      // refresh data di provider
+      _currentUser = await _userRepo.getUserById(userId);
+      notifyListeners();
+
+      return null; // sukses
+    } catch (e) {
+      return "Gagal memperbarui profil";
+    }
   }
 }

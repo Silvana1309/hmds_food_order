@@ -80,6 +80,8 @@ class CartProvider extends ChangeNotifier {
   Future<void> placeOrder(String userId, String paymentMethod) async {
     if (_items.isEmpty) return;
 
+    print("SIMPAN ORDER UNTUK USER ID: $userId");  // << TAMBAHKAN DI SINI
+
     final orderId = DateTime.now().millisecondsSinceEpoch.toString();
 
     final order = Order(

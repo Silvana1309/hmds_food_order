@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../models/food_item.dart';
 import '../view_model/cart_provider.dart';
+import '../view_model/user_provider.dart';
 
 class CartPage extends StatefulWidget {
   const CartPage({super.key});
@@ -301,8 +302,11 @@ class _CartPageState extends State<CartPage> {
   }
 
   // 🔸 Tangani Pembayaran (dengan user login)
-  Future<void> _handlePayment(BuildContext context,
-      CartProvider cartProvider, String paymentMethod) async {
+  Future<void> _handlePayment(
+      BuildContext context,
+      CartProvider cartProvider,
+      String paymentMethod) async {
+
     if (cartProvider.items.isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
@@ -313,13 +317,20 @@ class _CartPageState extends State<CartPage> {
       return;
     }
 
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? userId = prefs.getString('userId');
+    // 🔥 Ambil userProvider untuk cek user login
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    // 🔥 Semua user boleh pesan → pakai guest jika belum login
-    userId ??= "guest";
+    String userId;
 
-    // Simpan pesanan ke database
+// jika login, pakai id user asli
+    if (userProvider.currentUser != null) {
+      userId = userProvider.currentUser!.id.toString();
+    } else {
+      userId = "guest";
+    }
+
+
+    // Simpan pesanan
     await cartProvider.placeOrder(userId, paymentMethod);
 
     ScaffoldMessenger.of(context).showSnackBar(
@@ -329,9 +340,9 @@ class _CartPageState extends State<CartPage> {
       ),
     );
 
-    // pindah ke halaman riwayat pesanan
     Future.delayed(const Duration(seconds: 1), () {
       Navigator.pushNamed(context, '/order_history');
     });
   }
+
 }

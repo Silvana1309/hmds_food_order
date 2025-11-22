@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import '../models/food_item.dart';
 import '../models/order_model.dart';
 import '../repositories/order_repository.dart';
+import '../api/order_api.dart';
+
 
 class CartProvider extends ChangeNotifier {
   final List<FoodItem> _items = [];
@@ -89,16 +91,19 @@ class CartProvider extends ChangeNotifier {
       total: totalPrice,
       date: DateTime.now(),
       paymentMethod: paymentMethod,
-      status: "Completed", // default
+      status: "pending",
     );
 
     print("SIMPAN ORDER UNTUK USER ID: $userId");
 
-    await _orderRepo.insertOrder(order);
+    await _orderRepo.insertOrder(order);      // simpan SQLite
+    await OrderAPI.sendOrderToAPI(order);     // kirim ke MockAPI admin
+
 
     clearCart();
     notifyListeners();
   }
+
 
   /// 🔍 Ambil riwayat pesanan user dari SQLite
   Future<List<Order>> getUserOrders(String userId) async {

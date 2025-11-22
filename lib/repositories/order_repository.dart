@@ -16,6 +16,8 @@ class OrderRepository {
       'userId': order.userId,
       'total': order.total,
       'date': order.date.toIso8601String(),
+      'paymentMethod': order.paymentMethod,
+      'status': order.status,
     });
 
     // Simpan item-item dalam order

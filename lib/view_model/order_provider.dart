@@ -7,31 +7,24 @@ class OrderProvider with ChangeNotifier {
 
   List<Order> get orders => _orders;
 
-  // Tambah pesanan baru
-  void addOrder(
-      String userId,
-      List<FoodItem> cartItems,
-      double total,
-      String paymentMethod,   // ⬅ tambahkan
-      ) {
+  void addOrder(String userId, List<FoodItem> cartItems, double total, String paymentMethod) {
     final newOrder = Order(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: DateTime.now().toString(),
       userId: userId,
       items: cartItems,
       total: total,
       date: DateTime.now(),
-
-      paymentMethod: paymentMethod,     // ⬅ ISI !
-      status: "pending",               // ⬅ default status
+      paymentMethod: paymentMethod,
+      status: "pending",
     );
 
     _orders.add(newOrder);
     notifyListeners();
   }
 
-
-  // Ambil pesanan sesuai user
   List<Order> getOrdersByUser(String userId) {
     return _orders.where((order) => order.userId == userId).toList();
   }
 }
+
+

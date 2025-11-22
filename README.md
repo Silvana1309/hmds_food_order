@@ -67,7 +67,52 @@ import 'view/edit_profile_page.dart';
  ~ UserProvider - login, logout, sesi user
 
  * Root App (MyApp)
-- 
+- MaterialApp - root widget aplikasi
+- tema utama menggunakan warna
+- halaman pertama = SplashScreen
+- routing disediakan untuk semua halaman :
+ ~ menu makanan
+ ~ keranjang
+ ~ riwayat pesanan
+ ~ akun
+ ~ login & register
+ ~ edit profil
+
+ * SplashScreen
+- menampilkan logo selama 2 detik
+- mengecek apakah user sudah login
+- mengarahkan user ke :
+ ~ LoginPage - jika belum login
+ ~ HomePage - jika sudah login
+- Alur SplashScreen
+ ~ Delay 2 detik
+ ~ ambil user session dari UserProvider
+ ~ arahkan ke halaman sesuai kondisi login
+
+ * HomePage dengan Bottom Navigation
+- user dapat berpindah ke :
+ ~ Menu 
+ ~ Riwayat Pesanan
+ ~ Akun
+- menggunakan state untuk menentukan halaman yang ditampilkan
+
+ * Flow Aplikasi
+1. Aplikasi dibuka - SplashScreen tampil selama 2 detik
+2. Mengecek User Login - jika belum login -> ke LoginPage, jika sudah login -> masuk ke HomePage
+3. HomPage - tersedia 3 tab : 
+    ~ Menu Makanan
+    ~ Riwayat Pesanan
+    ~ Akun Penggguna
+
+ * Fitur Utama yang Diinisialisasi di main.dart
+
+Fitur - Description
+Provider State Management - menyimpan state keranjang, pesanan, user
+Splash Screen - menentukan halaman awal aplikasi
+Routing - navigasi ke semua halaman aplikasi
+Bottom Navigasi - navigasi utama user
+Database Reset - menghapus database lama saat startup
+
 
 
 

@@ -78,6 +78,8 @@ class OrderRepository {
           items: items,
           total: (orderMap['total'] as num).toDouble(),
           date: DateTime.parse(orderMap['date'] as String),
+          paymentMethod: orderMap['paymentMethod'] as String? ?? '',
+          status: orderMap['status'] as String? ?? '',
         ),
       );
     }

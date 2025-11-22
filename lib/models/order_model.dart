@@ -6,6 +6,8 @@ class Order {
   final List<FoodItem> items;
   final double total;
   final DateTime date;
+  final String paymentMethod;
+  final String status;
 
   Order({
     required this.id,
@@ -13,6 +15,8 @@ class Order {
     required this.items,
     required this.total,
     required this.date,
+    required this.paymentMethod,
+    required this.status,
   });
 
   Map<String, dynamic> toMap() {
@@ -22,6 +26,8 @@ class Order {
       'items': items.map((item) => item.toMap()).toList(),
       'total': total,
       'date': date.toIso8601String(),
+      'paymentMethod': paymentMethod,
+      'status': status,
     };
   }
 
@@ -32,6 +38,9 @@ class Order {
       items: (map['items'] as List).map((i) => FoodItem.fromMap(i)).toList(),
       total: (map['total'] as num).toDouble(),
       date: DateTime.parse(map['date']),
+      paymentMethod: map['paymentMethod'] ?? '',
+      status: map['status'] ?? '',
     );
   }
 }
+

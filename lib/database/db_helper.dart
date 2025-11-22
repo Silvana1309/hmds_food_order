@@ -74,7 +74,9 @@ class DBHelper {
       id TEXT PRIMARY KEY,
       userId TEXT,
       total REAL,
-      date TEXT
+      date TEXT,
+      paymentMethod TEXT,
+      status TEXT
     )
   ''');
 

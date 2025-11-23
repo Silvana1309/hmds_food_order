@@ -1,10 +1,11 @@
 class UserModel {
-  final int? id;
-  final String username;
-  final String password;
-  final String name;
-  final String email;
-  final String? profileImage; // << TAMBAHKAN INI
+  int? id;
+  String username;
+  String password;
+  String name;
+  String email;
+  String? profileImage;
+  String role; // << TAMBAHKAN
 
   UserModel({
     this.id,
@@ -12,8 +13,21 @@ class UserModel {
     required this.password,
     required this.name,
     required this.email,
-    this.profileImage, // << DAN INI
+    this.profileImage,
+    this.role = "user",   // default user
   });
+
+  factory UserModel.fromMap(Map<String, dynamic> map) {
+    return UserModel(
+      id: map['id'],
+      username: map['username'],
+      password: map['password'],
+      name: map['name'],
+      email: map['email'],
+      profileImage: map['profileImage'],
+      role: map['role'] ?? "user",
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return {
@@ -22,18 +36,8 @@ class UserModel {
       'password': password,
       'name': name,
       'email': email,
-      'profile_image': profileImage, // << SIMPAN KE DB
+      'profileImage': profileImage,
+      'role': role,
     };
-  }
-
-  factory UserModel.fromMap(Map<String, dynamic> map) {
-    return UserModel(
-      id: map['id'],
-      username: map['username'],
-      password: map['password'],
-      name: map['name'] ?? '',
-      email: map['email'] ?? '',
-      profileImage: map['profile_image'], // << AMBIL DARI DB
-    );
   }
 }

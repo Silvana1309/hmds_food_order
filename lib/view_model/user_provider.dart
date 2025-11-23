@@ -34,8 +34,14 @@ class UserProvider extends ChangeNotifier {
 
   // LOGIN
   Future<String?> login(String username, String password) async {
-    final user = await _userRepo.login(username, password);
 
+    // ⭐ LOGIN ADMIN MANUAL
+    if (username == "admin" && password == "admin123") {
+      return "ADMIN";
+    }
+
+    // 🔥 LOGIN USER BIASA
+    final user = await _userRepo.login(username, password);
     if (user == null) return "Username atau password salah!";
 
     _currentUser = user;
@@ -46,6 +52,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
     return null;
   }
+
 
   // LOGOUT
   Future<void> logout() async {

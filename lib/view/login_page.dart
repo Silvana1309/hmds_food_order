@@ -23,24 +23,36 @@ class _LoginPageState extends State<LoginPage> {
 
     final userProvider = Provider.of<UserProvider>(context, listen: false);
 
-    // 🔍 Login ke SQLite
-    final errorMsg = await userProvider.login(username, password);
 
-    if (errorMsg != null) {
+    //   LOGIN SEBAGAI ADMIN
+    // =========================
+    if (username == "admin" && password == "admin123") {
+      Navigator.pushReplacementNamed(context, "/admin_page");
+      return;
+    }
+
+// =========================
+//   LOGIN USER BIASA
+// =========================
+    final result = await userProvider.login(username, password);
+
+    if (result == "ADMIN") {
+      Navigator.pushReplacementNamed(context, "/admin_page");
+      return;
+    }
+    if (result != null) {
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMsg), backgroundColor: Colors.red),
+        SnackBar(content: Text(result), backgroundColor: Colors.red),
       );
       return;
     }
+
 
     // 🔥 WAJIB supaya currentUser terisi!
     await userProvider.loadUserSession();
 
     // 🔥 Masuk ke HomePage
-    Navigator.pushReplacement(
-      context,
-      MaterialPageRoute(builder: (_) => const HomePage()),
-    );
+    Navigator.pushReplacementNamed(context, "/menu");
   }
 
   @override

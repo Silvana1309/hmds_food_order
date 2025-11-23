@@ -15,6 +15,7 @@ import 'view/order_history_page.dart';
 import 'view/login_page.dart';
 import 'view/register_page.dart';
 import 'view/edit_profile_page.dart';
+import 'pages/admin_page.dart';
 
 
 
@@ -65,6 +66,7 @@ class MyApp extends StatelessWidget {
         '/login': (context) => const LoginPage(),
         '/register': (context) => const RegisterPage(),
         '/edit_profile': (context) => const EditProfilePage(),
+        "/admin_page": (_) => const AdminPage(),
       },
     );
   }

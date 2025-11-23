@@ -93,6 +93,14 @@ class DBHelper {
       category TEXT
     )
   ''');
+
+    await db.insert('users', {
+      'username': 'admin',
+      'password': 'admin123',
+      'name': 'Administrator',
+      'email': 'admin@hmds.com',
+      'role': 'admin',
+    });
   }
 
   // ====================

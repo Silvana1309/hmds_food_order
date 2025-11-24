@@ -15,8 +15,9 @@ import 'view/order_history_page.dart';
 import 'view/login_page.dart';
 import 'view/register_page.dart';
 import 'view/edit_profile_page.dart';
-import 'pages/admin_page.dart';
 
+import 'pages/admin_page.dart';
+import 'admin/admin_login_page.dart';
 
 
 // ==================================================
@@ -25,9 +26,9 @@ import 'pages/admin_page.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // 🔥 HAPUS DB LAMA YANG SUDAH RUSAK
-  final dbPath = await getDatabasesPath();
-  await deleteDatabase('$dbPath/hmds_db.db');
+  // ❌ Jangan hapus database lagi
+  // final dbPath = await getDatabasesPath();
+  // await deleteDatabase('$dbPath/hmds_db.db');
 
   final userProvider = UserProvider();
   await userProvider.loadUserSession();
@@ -67,6 +68,7 @@ class MyApp extends StatelessWidget {
         '/register': (context) => const RegisterPage(),
         '/edit_profile': (context) => const EditProfilePage(),
         "/admin_page": (_) => const AdminPage(),
+        "/admin_login": (context) => const AdminLoginPage(),
       },
     );
   }
@@ -83,19 +85,33 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen>
+    with SingleTickerProviderStateMixin {
+
+  late AnimationController _controller;
+  late Animation<double> _opacity;
+
   @override
   void initState() {
     super.initState();
-    _start();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 2),
+    );
+
+    _opacity = Tween<double>(begin: 0, end: 1).animate(_controller);
+    _controller.forward();
+
+    _startApp();
   }
 
-  Future<void> _start() async {
-    await Future.delayed(const Duration(seconds: 2));
-
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+  Future<void> _startApp() async {
+    await Future.delayed(const Duration(seconds: 3));
 
     if (!mounted) return;
+
+    final userProvider = Provider.of<UserProvider>(context, listen: false);
 
     Navigator.pushReplacement(
       context,
@@ -109,14 +125,22 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
-        child: FlutterLogo(size: 120),
+        child: FadeTransition(
+          opacity: _opacity,
+          child: Image.asset(
+            'assets/images/logo_hmds.png',
+            width: 150,
+          ),
+        ),
       ),
     );
   }
 }
+
+
 
 
 // ==================================================

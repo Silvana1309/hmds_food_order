@@ -5,7 +5,7 @@ class UserModel {
   String name;
   String email;
   String? profileImage;
-  String role; // << TAMBAHKAN
+  String role;
 
   UserModel({
     this.id,
@@ -14,7 +14,7 @@ class UserModel {
     required this.name,
     required this.email,
     this.profileImage,
-    this.role = "user",   // default user
+    this.role = "user",
   });
 
   factory UserModel.fromMap(Map<String, dynamic> map) {
@@ -24,7 +24,7 @@ class UserModel {
       password: map['password'],
       name: map['name'],
       email: map['email'],
-      profileImage: map['profileImage'],
+      profileImage: map['profile_image'], // ✅ FIXED
       role: map['role'] ?? "user",
     );
   }
@@ -36,7 +36,7 @@ class UserModel {
       'password': password,
       'name': name,
       'email': email,
-      'profileImage': profileImage,
+      'profile_image': profileImage, // ✅ FIXED
       'role': role,
     };
   }

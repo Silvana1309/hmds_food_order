@@ -59,7 +59,8 @@ class DBHelper {
       password TEXT,
       name TEXT,
       email TEXT,
-      profile_image TEXT
+      profile_image TEXT,
+      role TEXT
     )
   ''');
 
@@ -94,14 +95,17 @@ class DBHelper {
     )
   ''');
 
+    // Insert admin default
     await db.insert('users', {
       'username': 'admin',
       'password': 'admin123',
       'name': 'Administrator',
       'email': 'admin@hmds.com',
-      'role': 'admin',
+      'profile_image': null,
+      'role': 'admin'
     });
   }
+
 
   // ====================
   // SESSION
@@ -122,5 +126,10 @@ class DBHelper {
   Future<void> clearSession() async {
     final db = await database;
     await db.delete("session");
+  }
+
+  Future<List<Map<String, dynamic>>> getAllOrders() async {
+    final db = await database;
+    return await db.query('orders');
   }
 }

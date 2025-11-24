@@ -41,5 +41,21 @@ class Order {
       status: map['status'] ?? '',
     );
   }
+
+  factory Order.fromJson(Map<String, dynamic> json) {
+    return Order(
+      id: json['id'] ?? '',
+      userId: json['userId'] ?? '',
+      items: json['items'] != null
+          ? (json['items'] as List)
+          .map((i) => FoodItem.fromMap(i))
+          .toList()
+          : [],
+      total: (json['total'] as num).toDouble(),
+      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      paymentMethod: json['paymentMethod'] ?? '',
+      status: json['status'] ?? '',
+    );
+  }
 }
 

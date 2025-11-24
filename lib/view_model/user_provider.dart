@@ -9,10 +9,9 @@ class UserProvider extends ChangeNotifier {
   UserModel? _currentUser;
   UserModel? get currentUser => _currentUser;
 
-  // REGISTER
+  // REGISTER USER BIASA
   Future<String?> register(
       String username, String password, String name, String email) async {
-
     try {
       final exists = await _userRepo.usernameExists(username);
       if (exists) return "Username sudah digunakan!";
@@ -22,6 +21,7 @@ class UserProvider extends ChangeNotifier {
         password: password,
         name: name,
         email: email,
+        role: "user",   // penting!
       );
 
       await _userRepo.register(user);
@@ -31,16 +31,15 @@ class UserProvider extends ChangeNotifier {
     }
   }
 
-
   // LOGIN
   Future<String?> login(String username, String password) async {
 
-    // ⭐ LOGIN ADMIN MANUAL
+    // LOGIN ADMIN MANUAL
     if (username == "admin" && password == "admin123") {
       return "ADMIN";
     }
 
-    // 🔥 LOGIN USER BIASA
+    // LOGIN USER BIASA
     final user = await _userRepo.login(username, password);
     if (user == null) return "Username atau password salah!";
 
@@ -53,7 +52,6 @@ class UserProvider extends ChangeNotifier {
     return null;
   }
 
-
   // LOGOUT
   Future<void> logout() async {
     final db = DBHelper();
@@ -63,7 +61,7 @@ class UserProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  // LOAD session saat app dibuka
+  // LOAD SESSION SAAT APP MULAI
   Future<void> loadUserSession() async {
     try {
       final db = DBHelper();
@@ -76,11 +74,10 @@ class UserProvider extends ChangeNotifier {
       }
 
       final user = await _userRepo.getUserById(userId);
-
       _currentUser = user;
       notifyListeners();
+
     } catch (e) {
-      print("LOAD SESSION ERROR: $e");
       _currentUser = null;
       notifyListeners();
     }
@@ -96,11 +93,9 @@ class UserProvider extends ChangeNotifier {
     String? profileImage,
   }) async {
     try {
-      // Ambil user sekarang
       final current = _currentUser ?? await _userRepo.getUserById(userId);
       if (current == null) return "User tidak ditemukan";
 
-      // Buat user baru dengan data yang diperbarui
       final updated = UserModel(
         id: current.id,
         username: username ?? current.username,
@@ -108,15 +103,15 @@ class UserProvider extends ChangeNotifier {
         name: name ?? current.name,
         email: email ?? current.email,
         profileImage: profileImage ?? current.profileImage,
+        role: current.role,              //  ⭐ PENTING: jangan sampai hilang!
       );
 
-      // update ke database
       await _userRepo.update(updated);
 
-      // refresh data di provider
       _currentUser = await _userRepo.getUserById(userId);
       notifyListeners();
       return null;
+
     } catch (e) {
       return "Gagal memperbarui profil";
     }

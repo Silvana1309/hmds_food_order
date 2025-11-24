@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import '../models/order_model.dart';
+import 'package:provider/provider.dart';
+import '../view_model/order_provider.dart';
+
 
 class AdminOrdersPage extends StatefulWidget {
   const AdminOrdersPage({super.key});
@@ -68,7 +71,29 @@ class _AdminOrdersPageState extends State<AdminOrdersPage> {
                         "Metode: ${order.paymentMethod}\n"
                         "Status: ${order.status}",
                   ),
-                  trailing: const Icon(Icons.arrow_forward_ios),
+                  trailing: PopupMenuButton<String>(
+                    onSelected: (val) async {
+                      final url = Uri.parse(
+                        'https://6921934e512fb4140be0a867.mockapi.io/orders/${order.id}',
+                      );
+
+                      final res = await http.put(
+                        url,
+                        headers: {'Content-Type': 'application/json'},
+                        body: jsonEncode({'status': val}),
+                      );
+
+                      if (res.statusCode == 200) {
+                        setState(() {}); // refresh halaman admin
+                      }
+                    },
+                    itemBuilder: (_) => [
+                      const PopupMenuItem(
+                          value: 'pending', child: Text('Set Pending')),
+                      const PopupMenuItem(
+                          value: 'completed', child: Text('Set Completed')),
+                    ],
+                  ),
                 ),
               );
             },

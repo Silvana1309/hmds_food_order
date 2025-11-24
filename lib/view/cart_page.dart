@@ -91,30 +91,29 @@ class _CartPageState extends State<CartPage> {
                           const SizedBox(height: 8),
 
                           // 🔸 Catatan
-                          TextField(
-                            style:
-                            const TextStyle(color: Colors.white70),
-                            cursorColor: Colors.redAccent,
-                            decoration: InputDecoration(
-                              labelText: 'Catatan',
-                              labelStyle: const TextStyle(
-                                  color: Colors.white54, fontSize: 13),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.white24),
-                                borderRadius: BorderRadius.circular(8),
+                          // 🔸 Catatan (fixed tidak kebalik)
+                          Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: TextField(
+                              style: const TextStyle(color: Colors.white70),
+                              cursorColor: Colors.redAccent,
+                              decoration: InputDecoration(
+                                labelText: 'Catatan',
+                                labelStyle: const TextStyle(color: Colors.white54, fontSize: 13),
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.white24),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(color: Colors.redAccent),
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
                               ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: const BorderSide(
-                                    color: Colors.redAccent),
-                                borderRadius: BorderRadius.circular(8),
-                              ),
+                              controller: TextEditingController(text: item.note ?? ''),
+                              onChanged: (value) {
+                                cartProvider.updateNote(item.id, value);
+                              },
                             ),
-                            controller: TextEditingController(
-                                text: item.note ?? ''),
-                            onChanged: (value) {
-                              cartProvider.updateNote(item.id, value);
-                            },
                           ),
 
                           const SizedBox(height: 12),

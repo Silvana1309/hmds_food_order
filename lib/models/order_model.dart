@@ -9,6 +9,7 @@ class Order {
   final String paymentMethod;
   final String status;
 
+  String? username;
   Order({
     required this.id,
     required this.userId,
@@ -44,18 +45,24 @@ class Order {
 
   factory Order.fromJson(Map<String, dynamic> json) {
     return Order(
-      id: json['id'] ?? '',
-      userId: json['userId'] ?? '',
-      items: json['items'] != null
-          ? (json['items'] as List)
-          .map((i) => FoodItem.fromMap(i))
-          .toList()
-          : [],
-      total: (json['total'] as num).toDouble(),
-      date: DateTime.tryParse(json['date'] ?? '') ?? DateTime.now(),
+      id: json['id'].toString(),
+      userId: json['userId'].toString(),
+      items: json['items'] ?? [],
       paymentMethod: json['paymentMethod'] ?? '',
-      status: json['status'] ?? '',
+      total: double.tryParse(json['total'].toString()) ?? 0,
+      status: json['status'] ?? 'pending',
+      date: json['date'] ?? '',
     );
+  }
+  Map<String, dynamic> toJson() {
+    return {
+      "userId": userId,
+      "items": items,
+      "paymentMethod": paymentMethod,
+      "total": total,
+      "status": status,
+      "date": date,
+    };
   }
 }
 

@@ -44,7 +44,7 @@ class _LoginPageState extends State<LoginPage> {
     }
 
     await userProvider.loadUserSession();
-    Navigator.pushReplacementNamed(context, "/menu");
+    Navigator.pushReplacementNamed(context, "/home");
   }
 
   @override

@@ -25,11 +25,6 @@ import 'admin/admin_login_page.dart';
 // ==================================================
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  // ❌ Jangan hapus database lagi
-  // final dbPath = await getDatabasesPath();
-  // await deleteDatabase('$dbPath/hmds_db.db');
-
   final userProvider = UserProvider();
   await userProvider.loadUserSession();
 
@@ -44,7 +39,6 @@ void main() async {
     ),
   );
 }
-
 
 // ==================================================
 //                     ROOT APP
@@ -61,6 +55,7 @@ class MyApp extends StatelessWidget {
       home: const SplashScreen(),
       routes: {
         '/menu': (context) => const MenuPage(),
+        "/home": (context) => const HomePage(),
         '/cart': (context) => const CartPage(),
         '/order_history': (context) => const OrderHistoryPage(),
         '/account': (context) => const AccountPage(),

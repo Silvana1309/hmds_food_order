@@ -19,6 +19,123 @@ samples, guidance on mobile development, and a full API reference.
 
 Manual Book Aplikasi HMDS Food Order
 
+Aplikasi HMDS FOOD ini merupakan aplikasi pemesanan makanan yang berbasis flutter 
+yang memungkinkan pengguna untuk melihat menu,
+menambahkan item ke dalam keranjang belanja, melakukan pemesanan, melihat riwayat transaksi,
+mengelola akun, serta menyediakan halaman khusus untuk admin.
+
+Aplikasi ini menggunakan :
+-Flutter (Frontend)
+-Provider (State Management)
+-SQLite (Database lokal)
+-Routing Navigation 
+-Admin Page (untuk keperluan management data)
+
+Alur Utama Aplikasi :
+-Menampilkan Logo Aplikasi HMDS
+-Delay 3 detik untuk masuk ke aplikasi
+-Mengecek user pernah login/belum:
+ *Jika belum login-pindah ke LoginPage
+ *Jika sudah login-pindah ke HomePage
+
+Halaman-Halaman Aplikasi :
+-Login Page (User):
+ *User login untuk masuk ke aplikasi
+ *Navigasi ke RegisterPage jika belum memiliki akun
+
+-Register Page:
+ *membuat akun baru
+ *data disimpan di database (via provider)
+
+-Home Page:
+ *Menu-Menampilkan daftar makanan
+ *Riwayat-Menampilkan riwayat pesanan
+ *Akun-Informasi User + Edit Profil
+
+-Menu Page:
+ *Menampilkan list menu makanan
+ *Tombol "Add to Cart" untuk memasukkan makanan ke keranjang
+
+-Cart Page:
+ *Menampilkan daftar item yang dipilih
+ *Mengubah jumlah pesanan
+ *Menghapus item
+ *Tombol "Pesan Sekarang"
+
+-Order History Page:
+ *Menampilkan daftar pesanan sebelumnya
+ *Diambil dari OrderProvider
+
+-Edit Profil Page:
+ *Mengubah nama, email, atau password user
+
+Halaman Admin :
+-Admin Login:
+ *Login khusus admin
+ *Keamanan terpisah dari user
+
+-Admin Page:
+ *Mengelola data menu
+ *Melihat daftar transaksi
+ *Mengontrol data user(opsional)
+
+Sistem Navigasi (Routing) :
+   * /menu             - MenuPage
+   * /home             - HomePage 
+   * /cart             - CartPage
+   * /order_history    - OrderHistoryPage
+   * /account          - AccountPage
+   * /login            - LoginPage
+   * /register         - RegisterPage
+   * /edit_profil      - EditProfilPage
+   * /admin_page       - AdminPage
+   * /admin_login      - AdminLogin
+
+Provider & State Management :
+-CartProvider:
+ *Menambahkan item ke keranjang
+ *Menghapus item
+ *Mengubah jumlah
+ *Total harga
+
+-OrderProvider:
+ *Menyimpan pesanan (order)
+ *Riwayat pesanan
+
+-UserProvider:
+ *Login
+ *Registrasi
+ *Edit profil
+ *Menyimpan sesi user via SQLite
+
+Alur Login & Sesision Management :
+-User login - data disimpan di database lokal (SQLite)
+-Saat aplikasi di buka - loadUserSession() dijalankan
+-Jika user ditemukan - langsung masuk HomePage
+-Jika tidak - masuk LoginPage
+
+Alur Pemesanan (Order Flow)
+-User memilih menu
+-Tekan "Add to Cart"
+-Buka Cart
+-Atur jumlah atau hapus menu
+-Tekan "Pesan Sekarang"
+-OrderProvider menyimpan pesanan
+-Muncul Riwayat pesanan di OrderHistoryPage
+
+Bottom Navigation Bar :
+-Menu
+-Riwayat
+-Akun
+
+Database :
+-SQLite - menyimpan sesi user
+-MockAPI / DB eksternal (menyimpan pesanan)
+
+
+
+
+
 Main.dart - point utama dari aplikasi untuk bisa berjalan dengan lancar.
 Main.dart - menginisialisasi provider, database, halaman utama, routing, splash screen.
 
